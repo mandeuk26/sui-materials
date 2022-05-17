@@ -34,22 +34,16 @@ import SwiftUI
 
 @main
 struct KuchiApp: App {
-  let userManager = UserManager()
-  
-  init() {
-    userManager.load()
-  }
+    let userManager = UserManager()
 
-  var body: some Scene {
-    WindowGroup {
-      RegisterView(keyboardHandler: KeyboardFollower())
-        .environmentObject(userManager)
+    init() {
+        userManager.load()
     }
-  }
-}
 
-struct KuchiApp_Previews: PreviewProvider {
-  static var previews: some View {
-    RegisterView(keyboardHandler: KeyboardFollower())
-  }
+    var body: some Scene {
+        WindowGroup {
+            StarterView()
+                .environmentObject(userManager)
+        }
+    }
 }
