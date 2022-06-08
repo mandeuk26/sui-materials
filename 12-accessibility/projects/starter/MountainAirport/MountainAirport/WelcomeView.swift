@@ -42,6 +42,7 @@ struct WelcomeView: View {
       ZStack(alignment: .topLeading) {
         Image("welcome-background")
           .resizable()
+          .accessibilityHidden(true)
           .aspectRatio(contentMode: .fill)
           .frame(height: 250)
         if

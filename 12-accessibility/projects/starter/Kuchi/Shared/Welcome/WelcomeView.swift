@@ -33,36 +33,38 @@
 import SwiftUI
 
 struct WelcomeView: View {
-  @EnvironmentObject var userManager: UserManager
-  @State var showPractice = false
+    @EnvironmentObject var userManager: UserManager
+    @State var showPractice = false
 
-  @ViewBuilder
-  var body: some View {
-    if showPractice {
-      HomeView()
-    } else {
-      ZStack {
-        WelcomeBackgroundImage()
+    @ViewBuilder
+    var body: some View {
+        if showPractice {
+            HomeView()
+        } else {
+            ZStack {
+                WelcomeBackgroundImage()
 
-        VStack {
-          Text(verbatim: "Hi, \(userManager.profile.name)")
-          WelcomeMessageView()
-          // swiftlint:disable multiple_closures_with_trailing_closure
-          Button {
-            showPractice = true
-          } label: {
-            Image(systemName: "play")
-            Text(verbatim: "Start")
-          }
+                VStack {
+                    Text(verbatim: "Hi, \(userManager.profile.name)")
+                    WelcomeMessageView()
+                    // swiftlint:disable multiple_closures_with_trailing_closure
+                    Button {
+                        showPractice = true
+                    } label: {
+                        Image(systemName: "play")
+                        Text(verbatim: "Start")
+                    }
+                }
+                .accessibilityElement(children: .combine)
+            }
+            .accessibilityHint(Text("start playing Kuchi"))
         }
-      }
     }
-  }
 }
 
 struct WelcomeView_Previews: PreviewProvider {
-  static var previews: some View {
-    WelcomeView()
-      .environmentObject(UserManager())
-  }
+    static var previews: some View {
+        WelcomeView()
+            .environmentObject(UserManager())
+    }
 }

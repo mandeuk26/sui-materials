@@ -58,9 +58,20 @@ struct RGB {
   }
 
   /// A String representing the integer values of an RGB instance.
-  var intString: String {
-    "R \(Int(red * 255.0))"
-      + "  G \(Int(green * 255.0))"
-      + "  B \(Int(blue * 255.0))"
-  }
+    var rInt: Int {
+      Int(red * 255.0)
+    }
+    var gInt: Int {
+      Int(green * 255.0)
+    }
+    var bInt: Int {
+      Int(blue * 255.0)
+    }
+    /// A String representing the integer values of an RGB instance.
+    var intString: String {
+      "R \(rInt) G \(gInt) B \(bInt)"
+    }
+    var accString: String {
+      "Red \(rInt), Green \(gInt), Blue \(bInt)."
+    }
 }

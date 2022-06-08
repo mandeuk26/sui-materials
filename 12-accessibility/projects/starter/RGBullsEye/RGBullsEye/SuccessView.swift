@@ -45,6 +45,7 @@ struct SuccessView: View {
       VStack {
         Image("wand")
           .resizable()
+          .accessibilityHidden(true)
           .frame(width: imageSize, height: imageSize)
         Text("Congratulations!")
           .font(.largeTitle)
@@ -54,15 +55,16 @@ struct SuccessView: View {
           Text("You scored \(score) points on this color.")
             .padding(.bottom)
           ColorText(
-            text: "Target: " + target.intString,
+            text: "Target: " + target.accString,
             bkgd: Color(rgbStruct: target))
           ColorText(
-            text: "Guess: " + guess.intString,
+            text: "Guess: " + guess.accString,
             bkgd: Color(rgbStruct: guess))
         }
         .font(.title3)
         .foregroundColor(Color("grayText"))
         .multilineTextAlignment(.center)
+        .accessibilityElement(children: .combine)
       }
       VStack(spacing: 20) {
         Spacer()
