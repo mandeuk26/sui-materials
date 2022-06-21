@@ -33,35 +33,83 @@
 import SwiftUI
 
 struct FlightSearchDetails: View {
-  var flight: FlightInformation
-  @EnvironmentObject var lastFlightInfo: AppEnvironment
+    var flight: FlightInformation
+    @EnvironmentObject var lastFlightInfo: AppEnvironment
+    @Binding var showModal: Bool
+    @State private var checkInFlight: CheckInInfo?
+    @State private var rebookAlert = false
+    @State private var showFlightHistory = false
 
-  var body: some View {
-    ZStack {
-      Image("background-view")
-        .resizable()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-      VStack(alignment: .leading) {
-        FlightDetailHeader(flight: flight)
-        FlightInfoPanel(flight: flight)
-          .padding()
-          .background(
-            RoundedRectangle(cornerRadius: 20.0)
-              .opacity(0.3)
-          )
-        Spacer()
-      }.foregroundColor(.white)
-      .padding()
-    }.onAppear {
-      lastFlightInfo.lastFlightId = flight.id
+    var body: some View {
+        ZStack {
+            Image("background-view")
+                .resizable()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(alignment: .leading) {
+                HStack {
+                    FlightDetailHeader(flight: flight)
+                    Spacer()
+                    Button("Close") {
+                        self.showModal = false
+                    }
+                }
+
+                if flight.status == .canceled {
+                    Button("Rebook Flight") {
+                        rebookAlert = true
+                    }
+                    .alert(isPresented: $rebookAlert) {
+                        Alert(
+                            title: Text("Contact Your Airline"),
+                            message: Text("We cannot rebook this flight. Please contact the airline to reschedule this flight.")
+                        )
+                    }
+                }
+
+                if flight.isCheckInAvailable {
+                    Button("Check In for Flight") {
+                        self.checkInFlight = CheckInInfo(airline: self.flight.airline, flight: self.flight.number)
+                    }
+                    .actionSheet(item: $checkInFlight) { flight in
+                        ActionSheet(
+                            title: Text("Check In"),
+                            message: Text("Check in for"),
+                            buttons: [
+                                .cancel(),
+                                .destructive(Text("Reschedule")),
+                                .default(Text("Check In"))
+                            ]
+                        )
+                    }
+                }
+
+                Button("On-Time History") {
+                    showFlightHistory.toggle()
+                }
+                .popover(isPresented: $showFlightHistory, arrowEdge: .top) {
+                    FlightTimeHistory(flight: self.flight)
+                }
+
+                FlightInfoPanel(flight: flight)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20.0)
+                            .opacity(0.3)
+                    )
+                Spacer()
+            }.foregroundColor(.white)
+                .padding()
+        }.onAppear {
+            lastFlightInfo.lastFlightId = flight.id
+        }
     }
-  }
 }
 
 struct FlightSearchDetails_Previews: PreviewProvider {
-  static var previews: some View {
-    FlightSearchDetails(
-      flight: FlightData.generateTestFlight(date: Date())
-    ).environmentObject(AppEnvironment())
-  }
+    static var previews: some View {
+        FlightSearchDetails(
+            flight: FlightData.generateTestFlight(date: Date()),
+            showModal: .constant(true)
+        ).environmentObject(AppEnvironment())
+    }
 }
