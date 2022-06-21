@@ -44,16 +44,18 @@ struct WelcomeView: View {
           .resizable()
           .aspectRatio(contentMode: .fill)
           .frame(height: 250)
-        if
-          let id = appEnvironment.lastFlightId,
-          let lastFlight = flightInfo.getFlightById(id) {
+        if let id = appEnvironment.lastFlightId,
+           let lastFlight = flightInfo.getFlightById(id) {
           NavigationLink(
             destination: FlightDetails(flight: lastFlight),
             isActive: $showNextFlight
           ) { }
         }
         ScrollView {
-          VStack {
+          LazyVGrid(columns: [
+            GridItem(.fixed(160)),
+            GridItem(.fixed(160))
+          ], spacing: 15) {
             FlightStatusButton(flightInfo: flightInfo)
             SearchFlightsButton(flightInfo: flightInfo)
             AwardsButton()
@@ -62,13 +64,16 @@ struct WelcomeView: View {
               appEnvironment: appEnvironment,
               showNextFlight: $showNextFlight
             )
-          }.font(.title)
+          }
+          .font(.title)
           .foregroundColor(.white)
           .padding()
         }
-      }.navigationBarTitle("Mountain Airport")
+      }
+      .navigationBarTitle("Mountain Airport")
       // End Navigation View
-    }.navigationViewStyle(StackNavigationViewStyle())
+    }
+    .navigationViewStyle(StackNavigationViewStyle())
     .environmentObject(appEnvironment)
   }
 }
